@@ -179,9 +179,9 @@ const App = () => {
         hasReflection && React.createElement('div', { className: "flex flex-wrap justify-end items-center gap-3 mt-4 w-full" },
           React.createElement('button', {
             onClick: () => setIsModalOpen(true),
-            className: "group flex items-center justify-center gap-2.5 px-5 py-2.5 font-semibold text-white bg-gradient-to-r from-rose-400 to-rose-600 rounded-full shadow-lg hover:shadow-xl hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 transition-all duration-300 ease-in-out"
+            className: "flex items-center justify-center gap-2.5 px-5 py-2.5 font-semibold text-white bg-gradient-to-r from-rose-400 to-rose-600 rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500"
           }, 
-            React.createElement(SparkleIcon, { key: 'icon', className: "h-5 w-5 transition-transform duration-300 group-hover:rotate-12" }),
+            React.createElement(SparkleIcon, { key: 'icon', className: "h-5 w-5" }),
             React.createElement('span', { key: 'text' }, 'Ver Reflexión')
           )
         )
