@@ -1,47 +1,6 @@
 // --- Dependencies (loaded via importmap in index.html) ---
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
-import { GoogleGenAI } from "@google/genai";
-
-// --- services/geminiService.js ---
-const generateVerseReflection = async (verse) => {
-    // This is a placeholder for a secure way to get the API key in a real app.
-    // In this environment, it will likely be undefined.
-    const apiKey = (typeof process !== 'undefined' && process.env) ? process.env.API_KEY : undefined;
-
-    if (!apiKey) {
-        // Throw a specific error that the App component can catch and handle gracefully.
-        console.error("API_KEY environment variable not set. AI features will not work.");
-        throw new Error("La clave de API no está configurada.");
-    }
-    
-    // Initialize AI only when the function is called to prevent startup crash
-    const ai = new GoogleGenAI({ apiKey });
-
-    const prompt = `
-Eres un teólogo y pastor cristiano amigable. Tu tarea es escribir una breve reflexión inspiradora y alentadora sobre un versículo de la Biblia.
-
-**Instrucciones:**
-1.  La reflexión no debe tener más de 2 párrafos.
-2.  Mantén un tono cálido, cercano y fácil de entender para cualquier persona.
-3.  Enfócate en el mensaje de esperanza, amor o fortaleza del versículo.
-4.  No uses lenguaje demasiado técnico o académico.
-5.  Responde únicamente con la reflexión, sin saludos ni introducciones adicionales.
-
-**Versículo:**
-"${verse.text}" (${verse.reference})
-`;
-    try {
-        const response = await ai.models.generateContent({
-          model: 'gemini-2.5-flash',
-          contents: prompt,
-        });
-        return response.text;
-    } catch (error) {
-        console.error("Error generating reflection with Gemini:", error);
-        throw new Error("No se pudo generar la reflexión. Por favor, inténtelo de nuevo.");
-    }
-};
 
 // --- services/googleSheetService.js ---
 const SHEET_ID = '1y35vZaHK_zv1-aylHYMk92FwHFpqk5aPzeEyO9BLk1Q';
@@ -52,11 +11,22 @@ const parseCSV = (csvText) => {
   return rows.map((row) => {
     const columns = row.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g) || [];
     const cleanColumns = columns.map(col => col.trim().replace(/^"|"$/g, '').replace(/""/g, '"'));
-    if (cleanColumns.length >= 3) {
+    if (cleanColumns.length >= 5) {
       return {
         id: cleanColumns[0],
         text: cleanColumns[1],
         reference: cleanColumns[2],
+        reflexion1: cleanColumns[3],
+        reflexion2: cleanColumns[4],
+      };
+    }
+     if (cleanColumns.length >= 3) {
+      return {
+        id: cleanColumns[0],
+        text: cleanColumns[1],
+        reference: cleanColumns[2],
+        reflexion1: '',
+        reflexion2: '',
       };
     }
     return null;
@@ -92,11 +62,13 @@ const SparkleIcon = (props) => (
     React.createElement('path', { d: "M12 2 L14.5 9.5 L22 12 L14.5 14.5 L12 22 L9.5 14.5 L2 12 L9.5 9.5 Z" })
   )
 );
+const CloseIcon = (props) => (
+  React.createElement('svg', { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props },
+    React.createElement('path', { strokeLinecap: "round", strokeLinejoin: "round", d: "M6 18L18 6M6 6l12 12" })
+  )
+);
 
 // --- components/LoadingSpinner.js ---
-const LoadingSpinner = () => {
-  return React.createElement('div', { className: "animate-spin rounded-full h-6 w-6 border-b-2 border-white" });
-};
 const InitialLoadingSpinner = () => {
   return React.createElement('div', { className: "animate-spin rounded-full h-8 w-8 border-b-2 border-rose-500" });
 };
@@ -139,20 +111,29 @@ const PromoBanner = () => {
   );
 };
 
-// --- components/AIGeneratedContent.js ---
-const AIGeneratedContent = ({ reflection, error, isLoading }) => {
-  if (!reflection && !error && !isLoading) {
-    return null;
-  }
-  return React.createElement('div', { className: "w-full p-6 mt-4 bg-white rounded-2xl shadow-lg border border-zinc-200/80 animate-fade-in" },
-    isLoading && React.createElement('div', { className: "flex items-center gap-2 text-stone-600" },
-       React.createElement('div', { className: "animate-spin rounded-full h-5 w-5 border-b-2 border-rose-500" }),
-      React.createElement('span', null, "Generando una reflexión para ti...")
-    ),
-    error && React.createElement('div', { className: "text-amber-800 bg-amber-100 p-3 rounded-lg text-center" }, error),
-    reflection && React.createElement('p', { className: "text-stone-700 whitespace-pre-wrap leading-relaxed text-sm" }, reflection)
+// --- components/Modal.js ---
+const Modal = ({ isOpen, onClose, children }) => {
+  if (!isOpen) return null;
+
+  return React.createElement('div', {
+    onClick: onClose,
+    className: "fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 backdrop-blur-sm"
+  },
+    React.createElement('div', {
+      onClick: e => e.stopPropagation(),
+      className: "bg-white rounded-2xl shadow-xl w-full max-w-lg p-6 relative animate-fade-in"
+    },
+      React.createElement('button', {
+        onClick: onClose,
+        className: "absolute top-4 right-4 text-stone-500 hover:text-stone-800 transition-colors"
+      },
+        React.createElement(CloseIcon, { className: "h-6 w-6" })
+      ),
+      children
+    )
   );
 };
+
 
 // --- App.js ---
 const App = () => {
@@ -160,10 +141,7 @@ const App = () => {
   const [currentVerse, setCurrentVerse] = useState(null);
   const [isLoadingVerse, setIsLoadingVerse] = useState(true);
   const [error, setError] = useState(null);
-  const [showReflection, setShowReflection] = useState(false);
-  const [aiReflection, setAiReflection] = useState(null);
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [generationError, setGenerationError] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const loadVerses = async () => {
@@ -186,31 +164,6 @@ const App = () => {
     loadVerses();
   }, []);
 
-  const handleAiReflection = async () => {
-    if (aiReflection || generationError) {
-      setShowReflection(prev => !prev);
-      return;
-    }
-    if (!currentVerse || isGenerating) return;
-    setShowReflection(true);
-    setIsGenerating(true);
-    setGenerationError(null);
-    try {
-      const reflection = await generateVerseReflection(currentVerse);
-      setAiReflection(reflection);
-    } catch (err) {
-      let friendlyMsg = 'Ocurrió un error inesperado. Por favor, inténtalo de nuevo.';
-      if (err instanceof Error && err.message.includes("clave de API no está configurada")) {
-        friendlyMsg = "Esta función de IA requiere una configuración especial que no está disponible en este momento.";
-      } else if (err instanceof Error) {
-        friendlyMsg = err.message;
-      }
-      setGenerationError(friendlyMsg);
-    } finally {
-      setIsGenerating(false);
-    }
-  };
-
   const renderMainContent = () => {
     if (isLoadingVerse && !currentVerse) {
       return React.createElement('div', { className: "flex justify-center items-center h-64" }, React.createElement(InitialLoadingSpinner));
@@ -219,31 +172,19 @@ const App = () => {
       return React.createElement('div', { className: "text-center text-red-600 bg-red-100 p-4 rounded-lg" }, error);
     }
     if (currentVerse) {
-      const buttonContent = isGenerating
-        ? [React.createElement(LoadingSpinner, { key: 'spinner' }), React.createElement('span', { key: 'text' }, "Generando...")]
-        : [
-            React.createElement(SparkleIcon, { key: 'icon', className: "h-5 w-5 transition-transform duration-300 group-hover:rotate-12" }),
-            React.createElement('span', { key: 'text' },
-              aiReflection || generationError
-                ? (showReflection ? 'Ocultar Reflexión' : 'Ver Reflexión')
-                : 'Ver Reflexión'
-            )
-          ];
+      const hasReflection = currentVerse.reflexion1 || currentVerse.reflexion2;
 
       return React.createElement(React.Fragment, null,
         React.createElement(VerseDisplay, { verse: currentVerse, isLoading: isLoadingVerse }),
-        React.createElement('div', { className: "flex flex-wrap justify-end items-center gap-3 mt-4 w-full" },
+        hasReflection && React.createElement('div', { className: "flex flex-wrap justify-end items-center gap-3 mt-4 w-full" },
           React.createElement('button', {
-            onClick: handleAiReflection,
-            disabled: isGenerating,
-            className: "group flex items-center justify-center gap-2.5 px-5 py-2.5 font-semibold text-white bg-gradient-to-r from-rose-400 to-rose-600 rounded-full shadow-lg hover:shadow-xl hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 transition-all duration-300 ease-in-out disabled:opacity-70 disabled:cursor-not-allowed disabled:scale-100"
-          }, ...buttonContent)
-        ),
-        showReflection && React.createElement(AIGeneratedContent, {
-          isLoading: isGenerating,
-          reflection: aiReflection,
-          error: generationError
-        })
+            onClick: () => setIsModalOpen(true),
+            className: "group flex items-center justify-center gap-2.5 px-5 py-2.5 font-semibold text-white bg-gradient-to-r from-rose-400 to-rose-600 rounded-full shadow-lg hover:shadow-xl hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 transition-all duration-300 ease-in-out"
+          }, 
+            React.createElement(SparkleIcon, { key: 'icon', className: "h-5 w-5 transition-transform duration-300 group-hover:rotate-12" }),
+            React.createElement('span', { key: 'text' }, 'Ver Reflexión')
+          )
+        )
       );
     }
     return React.createElement('div', { className: "text-center text-stone-500 mt-10" }, "No se encontraron versículos.");
@@ -261,6 +202,15 @@ const App = () => {
       React.createElement('div', { className: "max-w-4xl mx-auto" },
         React.createElement(PromoBanner, null)
       )
+    ),
+    React.createElement(Modal, {
+      isOpen: isModalOpen,
+      onClose: () => setIsModalOpen(false)
+    },
+      React.createElement('h2', { className: "text-2xl font-bold font-serif text-rose-900 mb-4" }, "Reflexión"),
+      currentVerse?.reflexion1 && React.createElement('p', { className: "text-stone-700 whitespace-pre-wrap leading-relaxed text-sm mb-4" }, currentVerse.reflexion1),
+      currentVerse?.reflexion2 && React.createElement('p', { className: "text-stone-700 whitespace-pre-wrap leading-relaxed text-sm" }, currentVerse.reflexion2),
+      React.createElement('p', { className: "text-stone-800 font-semibold text-center mt-6" }, "Dios te Bendiga")
     )
   );
 };
