@@ -50,7 +50,7 @@ const fetchVerses = async () => {
 // --- Contenido de components/Icons.js ---
 const TShirtIcon = (props) => (
   React.createElement('svg', { xmlns: "http://www.w3.org/2000/svg", width: "24", height: "24", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", ...props },
-    React.createElement('path', { d: "M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99 .84H6v10c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z" })
+    React.createElement('path', { d: "M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99 .84H6v10c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V10h2.15a1 1 0 0 0 .99 .84l.58-3.47a2 2 0 0 0-1.34-2.23z" })
   )
 );
 
@@ -69,7 +69,7 @@ const LoadingSpinner = () => {
 const VerseDisplay = ({ verse, isLoading }) => {
   return React.createElement('div', { className: `bg-white p-6 rounded-2xl shadow-lg border border-zinc-200/80 w-full transition-opacity duration-300 ease-in-out ${isLoading ? 'opacity-50' : 'opacity-100'}` },
     React.createElement('blockquote', { className: "text-center" },
-      React.createElement('p', { className: "text-xl md:text-2xl font-serif text-stone-800 leading-relaxed" }, `“${verse.text}”`)
+      React.createElement('p', { className: "text-base md:text-lg text-stone-800 leading-relaxed" }, `“${verse.text}”`)
     ),
     React.createElement('cite', { className: "block text-right mt-6 text-md font-semibold text-rose-800" }, `— ${verse.reference}`)
   );
@@ -136,7 +136,7 @@ const App = () => {
     setShowComment(prev => !prev);
   };
 
-  return React.createElement('div', { className: "flex flex-col h-screen overflow-hidden bg-zinc-50 text-stone-800 selection:bg-rose-200 selection:text-rose-900" },
+  return React.createElement('div', { className: "flex flex-col h-screen bg-zinc-50 text-stone-800 selection:bg-rose-200 selection:text-rose-900" },
     React.createElement('header', { className: "relative w-full p-4 text-center bg-rose-50 sticky top-0 z-10 shadow-md" },
       React.createElement('h1', { className: "text-3xl font-bold font-serif text-rose-900" }, "Palabra de Dios"),
       React.createElement('p', { className: "mt-1 text-lg text-rose-800/80" }, "Miel para tu alma")
@@ -153,7 +153,7 @@ const App = () => {
             }, showComment ? 'Ocultar Comentario' : 'Ver Comentario')
           ),
           showComment && currentVerse.comment && React.createElement('div', { className: "w-full p-6 mt-2 bg-white rounded-2xl shadow-lg border border-zinc-200/80 animate-fade-in" },
-            React.createElement('p', { className: "text-stone-700 whitespace-pre-wrap leading-relaxed" }, currentVerse.comment)
+            React.createElement('p', { className: "text-stone-700 whitespace-pre-wrap leading-relaxed text-sm" }, currentVerse.comment)
           )
         )
       : React.createElement('div', { className: "text-center text-stone-500" }, "No se encontraron versículos.")
