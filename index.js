@@ -74,7 +74,7 @@ const fetchVerses = async () => {
 // --- components/Icons.js ---
 const TShirtIcon = (props) => (
   React.createElement('svg', { xmlns: "http://www.w3.org/2000/svg", width: "24", height: "24", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", ...props },
-    React.createElement('path', { d: "M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99 .84H6v10c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z" })
+    React.createElement('path', { d: "M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99 .84H6v10c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V10h2.15a1 1 0 0 0 .99 .84l.58-3.47a2 2 0 0 0-1.34-2.23z" })
   )
 );
 const WhatsAppIcon = (props) => (
@@ -89,9 +89,8 @@ const SparkleIcon = (props) => (
 );
 
 // --- components/LoadingSpinner.js ---
-const LoadingSpinner = (props) => {
-  const { className = "animate-spin rounded-full h-6 w-6 border-b-2 border-white" } = props;
-  return React.createElement('div', { className });
+const LoadingSpinner = () => {
+  return React.createElement('div', { className: "animate-spin rounded-full h-6 w-6 border-b-2 border-white" });
 };
 
 // --- components/VerseDisplay.js ---
@@ -206,7 +205,7 @@ const App = () => {
   const mainContent = () => {
     if (isLoadingVerse && !currentVerse) {
       return React.createElement('div', { className: "flex justify-center items-center h-64" },
-        React.createElement(LoadingSpinner, { className: "animate-spin rounded-full h-8 w-8 border-b-2 border-rose-500" })
+        React.createElement('div', { className: "animate-spin rounded-full h-8 w-8 border-b-2 border-rose-500" })
       );
     }
     if (error) {
@@ -272,3 +271,4 @@ root.render(
     React.createElement(App, null)
   )
 );
+
