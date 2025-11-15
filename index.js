@@ -254,7 +254,7 @@ const App = () => {
      React.createElement('button', {
         onClick: toggleTheme,
         'aria-label': 'Cambiar tema',
-        className: "fixed bottom-48 right-4 z-30 w-12 h-12 bg-white dark:bg-slate-800 rounded-full shadow-lg border border-zinc-200/80 dark:border-slate-700 flex items-center justify-center text-rose-500 dark:text-amber-300 hover:bg-zinc-100 dark:hover:bg-slate-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 dark:focus:ring-amber-400 dark:focus:ring-offset-slate-900"
+        className: "fixed bottom-48 right-4 z-30 w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-slate-900 bg-indigo-900 dark:bg-amber-200 text-amber-300 dark:text-slate-800 border border-indigo-700 dark:border-amber-300/80 hover:bg-indigo-800 dark:hover:bg-amber-300 focus:ring-rose-500 dark:focus:ring-amber-400"
       },
       theme === 'light' 
         ? React.createElement(MoonIcon, { className: "h-6 w-6" }) 
