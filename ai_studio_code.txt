@@ -1,4 +1,0 @@
-{
-  "name": "Miel para tu Alma",
-  "description": "Una aplicación para mostrar versículos inspiradores de la Biblia desde una hoja de cálculo de Google."
-}
