@@ -100,7 +100,7 @@ const PromoBanner = () => {
         href: whatsappUrl,
         target: "_blank", 
         rel: "noopener noreferrer",
-        className: "px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-green-500 to-green-600 rounded-full shadow-md hover:shadow-lg hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-300 flex items-center gap-2 self-end sm:self-center whitespace-nowrap"
+        className: "px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-green-500 to-green-600 rounded-full shadow-md hover:shadow-lg hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-300 flex items-center gap-2 self-end sm:self-auto whitespace-nowrap"
       },
         React.createElement(WhatsAppIcon, { className: "h-5 w-5" }),
         "Contactanos"
