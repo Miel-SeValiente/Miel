@@ -5,11 +5,14 @@ import { GoogleGenAI } from "@google/genai";
 
 // --- services/geminiService.js ---
 const generateVerseReflection = async (verse) => {
+    // This is a placeholder for a secure way to get the API key in a real app.
+    // In this environment, it will likely be undefined.
     const apiKey = (typeof process !== 'undefined' && process.env) ? process.env.API_KEY : undefined;
 
     if (!apiKey) {
+        // Throw a specific error that the App component can catch and handle gracefully.
         console.error("API_KEY environment variable not set. AI features will not work.");
-        throw new Error("La clave de API no está configurada. No se puede generar la reflexión.");
+        throw new Error("La clave de API no está configurada.");
     }
     
     // Initialize AI only when the function is called to prevent startup crash
@@ -146,7 +149,7 @@ const AIGeneratedContent = ({ reflection, error, isLoading }) => {
        React.createElement('div', { className: "animate-spin rounded-full h-5 w-5 border-b-2 border-rose-500" }),
       React.createElement('span', null, "Generando una reflexión para ti...")
     ),
-    error && React.createElement('div', { className: "text-red-600 bg-red-100 p-3 rounded-lg" }, error),
+    error && React.createElement('div', { className: "text-amber-800 bg-amber-100 p-3 rounded-lg text-center" }, error),
     reflection && React.createElement('p', { className: "text-stone-700 whitespace-pre-wrap leading-relaxed text-sm" }, reflection)
   );
 };
@@ -196,8 +199,13 @@ const App = () => {
       const reflection = await generateVerseReflection(currentVerse);
       setAiReflection(reflection);
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Ocurrió un error inesperado al generar la reflexión.';
-      setGenerationError(msg);
+      let friendlyMsg = 'Ocurrió un error inesperado. Por favor, inténtalo de nuevo.';
+      if (err instanceof Error && err.message.includes("clave de API no está configurada")) {
+        friendlyMsg = "Esta función de IA requiere una configuración especial que no está disponible en este momento.";
+      } else if (err instanceof Error) {
+        friendlyMsg = err.message;
+      }
+      setGenerationError(friendlyMsg);
     } finally {
       setIsGenerating(false);
     }
