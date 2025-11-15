@@ -60,6 +60,12 @@ const WhatsAppIcon = (props) => (
     )
 );
 
+const SparkleIcon = (props) => (
+    React.createElement('svg', { xmlns: "http://www.w3.org/2000/svg", width: "24", height: "24", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", ...props },
+        React.createElement('path', { d: "M12 2 L14.5 9.5 L22 12 L14.5 14.5 L12 22 L9.5 14.5 L2 12 L9.5 9.5 Z" })
+    )
+);
+
 // --- Contenido de components/LoadingSpinner.js ---
 const LoadingSpinner = () => {
   return React.createElement('div', { className: "animate-spin rounded-full h-8 w-8 border-b-2 border-rose-500" });
@@ -94,10 +100,10 @@ const PromoBanner = () => {
         href: whatsappUrl,
         target: "_blank", 
         rel: "noopener noreferrer",
-        className: "px-4 py-2 text-sm font-semibold text-white bg-green-500 rounded-full shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-300 flex items-center gap-2 self-start sm:self-center whitespace-nowrap"
+        className: "px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-green-500 to-green-600 rounded-full shadow-md hover:shadow-lg hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-300 flex items-center gap-2 self-end sm:self-center whitespace-nowrap"
       },
         React.createElement(WhatsAppIcon, { className: "h-5 w-5" }),
-        "Contactar Vendedor"
+        "Contactanos"
       )
     )
   );
@@ -146,11 +152,14 @@ const App = () => {
       : error ? React.createElement('div', { className: "text-center text-red-600 bg-red-100 p-4 rounded-lg" }, error)
       : currentVerse ? React.createElement(React.Fragment, null,
           React.createElement(VerseDisplay, { verse: currentVerse, isLoading: isLoadingVerse }),
-          currentVerse.comment && React.createElement('div', {className: "flex flex-wrap justify-center items-center gap-4 mt-2 w-full"},
-            React.createElement('button', {
+          React.createElement('div', {className: "flex flex-wrap justify-end items-center gap-4 mt-2 w-full"},
+            currentVerse.comment && React.createElement('button', {
               onClick: handleToggleComment,
-              className: "px-6 py-2 font-semibold text-rose-800 bg-rose-100 border border-rose-200 rounded-full shadow-sm hover:bg-rose-200 transition-colors duration-300"
-            }, showComment ? 'Ocultar Comentario' : 'Ver Comentario')
+              className: "group flex items-center justify-center gap-2 px-5 py-2.5 font-semibold text-white bg-gradient-to-r from-rose-400 to-rose-600 rounded-full shadow-lg hover:shadow-xl hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 transition-all duration-300 ease-in-out"
+            }, 
+              React.createElement(SparkleIcon, { className: "h-5 w-5 transition-transform duration-300 group-hover:rotate-12" }),
+              showComment ? 'Ocultar Comentario' : 'Ver Comentario'
+            )
           ),
           showComment && currentVerse.comment && React.createElement('div', { className: "w-full p-6 mt-2 bg-white rounded-2xl shadow-lg border border-zinc-200/80 animate-fade-in" },
             React.createElement('p', { className: "text-stone-700 whitespace-pre-wrap leading-relaxed text-xs" }, currentVerse.comment)
