@@ -67,6 +67,17 @@ const CloseIcon = (props) => (
     React.createElement('path', { strokeLinecap: "round", strokeLinejoin: "round", d: "M6 18L18 6M6 6l12 12" })
   )
 );
+const SunIcon = (props) => (
+  React.createElement('svg', { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props },
+    React.createElement('path', { strokeLinecap: "round", strokeLinejoin: "round", d: "M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-6.364-.386l1.591-1.591M3 12h2.25m.386-6.364l1.591 1.591M12 12a2.25 2.25 0 00-2.25 2.25 2.25 2.25 0 002.25 2.25 2.25 2.25 0 002.25-2.25A2.25 2.25 0 0012 12z" })
+  )
+);
+const MoonIcon = (props) => (
+  React.createElement('svg', { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props },
+    React.createElement('path', { strokeLinecap: "round", strokeLinejoin: "round", d: "M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" })
+  )
+);
+
 
 // --- components/LoadingSpinner.js ---
 const InitialLoadingSpinner = () => {
@@ -74,42 +85,68 @@ const InitialLoadingSpinner = () => {
 };
 
 // --- components/VerseDisplay.js ---
-const VerseDisplay = ({ verse, isLoading }) => {
-  return React.createElement('div', { className: `bg-white p-6 rounded-2xl shadow-lg border border-zinc-200/80 w-full transition-opacity duration-300 ease-in-out ${isLoading ? 'opacity-50' : 'opacity-100'}` },
+const VerseDisplay = ({ verse, isLoading, children }) => {
+  return React.createElement('div', { className: `bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg border border-zinc-200/80 dark:border-slate-700 w-full transition-opacity duration-300 ease-in-out ${isLoading ? 'opacity-50' : 'opacity-100'}` },
     React.createElement('blockquote', { className: "text-center" },
-      React.createElement('p', { className: "text-base md:text-lg text-stone-800 leading-relaxed" }, `“${verse.text}”`)
+      React.createElement('p', { className: "text-base md:text-lg text-stone-800 dark:text-stone-200 leading-relaxed" }, `“${verse.text}”`)
     ),
-    React.createElement('cite', { className: "block text-right mt-6 text-md font-semibold text-rose-800" }, `— ${verse.reference}`)
+    React.createElement('div', { className: "mt-6 flex justify-between items-center" },
+      React.createElement('div', null, children),
+      React.createElement('cite', { className: "text-md font-semibold text-rose-800 dark:text-rose-400" }, `— ${verse.reference}`)
+    )
   );
 };
 
 // --- components/PromoBanner.js ---
 const PromoBanner = () => {
-  const whatsappNumber = '584125384440';
-  const message = encodeURIComponent('¡Hola! Me gustaría más información sobre las franelas, por favor.');
-  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${message}`;
+    const whatsappNumber = '584125384440';
+    const message = encodeURIComponent('¡Hola! Me gustaría más información sobre las franelas, por favor.');
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${message}`;
 
-  return React.createElement('div', { className: "w-full p-4 bg-gradient-to-br from-rose-50 to-amber-100 rounded-2xl shadow-lg border border-rose-200/60 flex items-center gap-4" },
-    React.createElement('div', { className: "flex-shrink-0" },
-      React.createElement(TShirtIcon, { className: "h-12 w-12 text-rose-500" })
-    ),
-    React.createElement('div', { className: "flex-grow flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2" },
-      React.createElement('div', null,
-        React.createElement('h3', { className: "font-bold font-serif text-rose-900 text-lg" }, "¡Viste tu Fe!"),
-        React.createElement('p', { className: "text-sm text-rose-800/90" }, "Franelas con la palabra de Dios.")
-      ),
-      React.createElement('a', {
-          href: whatsappUrl,
-          target: "_blank",
-          rel: "noopener noreferrer",
-          className: "px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-green-500 to-green-600 rounded-full shadow-md hover:shadow-lg hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-300 flex items-center gap-2 self-end sm:self-auto whitespace-nowrap"
+    return React.createElement('div', {
+        className: "w-full h-20 rounded-2xl shadow-lg overflow-hidden relative bg-rose-100 dark:bg-slate-700"
+    },
+        // Left side colored shape & text
+        React.createElement('div', {
+            className: "absolute top-0 left-0 w-[65%] h-full bg-gradient-to-r from-rose-500 to-rose-600 dark:from-rose-600 dark:to-rose-700 p-2 sm:p-3 flex flex-col justify-center",
+            style: { clipPath: 'polygon(0 0, 100% 0, 85% 100%, 0% 100%)' }
         },
-        React.createElement(WhatsAppIcon, { className: "h-5 w-5" }),
-        "Contáctanos"
-      )
-    )
-  );
+            React.createElement('p', { className: "text-white/90 text-[11px] sm:text-xs uppercase tracking-wider" }, "Franelas con la"),
+            React.createElement('h3', {
+                className: "text-white text-sm sm:text-base font-bold uppercase tracking-wide border border-white py-0.5 px-1.5 inline-block my-0.5"
+            }, "Palabra de Dios"),
+            React.createElement('a', {
+                href: whatsappUrl,
+                target: "_blank",
+                rel: "noopener noreferrer",
+                className: "mt-1 text-xs font-bold text-white flex items-center gap-1 hover:underline decoration-white/70"
+            },
+                "Contáctanos",
+                 React.createElement('svg', {
+                     xmlns: "http://www.w3.org/2000/svg",
+                     viewBox: "0 0 20 20",
+                     fill: "currentColor",
+                     className: "w-3 h-3"
+                 },
+                    React.createElement('path', {
+                        fillRule: "evenodd",
+                        d: "M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z",
+                        clipRule: "evenodd"
+                    })
+                )
+            )
+        ),
+        // Right side icon
+        React.createElement('div', {
+            className: "absolute top-0 right-0 w-2/5 h-full flex items-center justify-center p-2"
+        },
+            React.createElement(TShirtIcon, {
+                className: "h-10 w-10 text-rose-500 dark:text-rose-300"
+            })
+        )
+    );
 };
+
 
 // --- components/Modal.js ---
 const Modal = ({ isOpen, onClose, children }) => {
@@ -117,15 +154,15 @@ const Modal = ({ isOpen, onClose, children }) => {
 
   return React.createElement('div', {
     onClick: onClose,
-    className: "fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+    className: "fixed inset-0 bg-black/70 dark:bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
   },
     React.createElement('div', {
       onClick: e => e.stopPropagation(),
-      className: "bg-white rounded-2xl shadow-xl w-full max-w-lg p-6 relative animate-fade-in"
+      className: "bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-lg p-6 relative animate-fade-in"
     },
       React.createElement('button', {
         onClick: onClose,
-        className: "absolute top-4 right-4 text-stone-500 hover:text-stone-800 transition-colors"
+        className: "absolute top-4 right-4 text-stone-500 hover:text-stone-800 dark:text-slate-400 dark:hover:text-slate-100 transition-colors"
       },
         React.createElement(CloseIcon, { className: "h-6 w-6" })
       ),
@@ -142,6 +179,21 @@ const App = () => {
   const [isLoadingVerse, setIsLoadingVerse] = useState(true);
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
+
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  }, [theme]);
+  
+  const toggleTheme = () => {
+    setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
+  };
 
   useEffect(() => {
     const loadVerses = async () => {
@@ -174,31 +226,41 @@ const App = () => {
     if (currentVerse) {
       const hasReflection = currentVerse.reflexion1 || currentVerse.reflexion2;
 
-      return React.createElement(React.Fragment, null,
-        React.createElement(VerseDisplay, { verse: currentVerse, isLoading: isLoadingVerse }),
-        hasReflection && React.createElement('div', { className: "flex flex-wrap justify-end items-center gap-3 mt-4 w-full" },
-          React.createElement('button', {
-            onClick: () => setIsModalOpen(true),
-            className: "flex items-center justify-center gap-2.5 px-5 py-2.5 font-semibold text-white bg-gradient-to-r from-rose-400 to-rose-600 rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500"
-          }, 
-            React.createElement(SparkleIcon, { key: 'icon', className: "h-5 w-5" }),
-            React.createElement('span', { key: 'text' }, 'Ver Reflexión')
-          )
+      return React.createElement(VerseDisplay, { verse: currentVerse, isLoading: isLoadingVerse },
+        hasReflection && React.createElement('button', {
+          onClick: () => setIsModalOpen(true),
+          className: "flex items-center justify-center gap-2.5 px-5 py-2.5 font-semibold text-white bg-gradient-to-r from-rose-400 to-rose-600 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 dark:focus:ring-offset-slate-800"
+        },
+          React.createElement(SparkleIcon, { key: 'icon', className: "h-5 w-5" }),
+          React.createElement('span', { key: 'text' }, 'Ver Reflexión')
         )
       );
     }
-    return React.createElement('div', { className: "text-center text-stone-500 mt-10" }, "No se encontraron versículos.");
+    return React.createElement('div', { className: "text-center text-stone-500 dark:text-stone-400 mt-10" }, "No se encontraron versículos.");
   };
 
-  return React.createElement('div', { className: "flex flex-col min-h-screen bg-zinc-50 text-stone-800 selection:bg-rose-200 selection:text-rose-900" },
-    React.createElement('header', { className: "relative w-full p-4 text-center bg-rose-50 sticky top-0 z-10 shadow-md" },
-      React.createElement('h1', { className: "text-3xl font-bold font-serif text-rose-900" }, "Palabra de Dios"),
-      React.createElement('p', { className: "mt-1 text-lg text-rose-800/80" }, "Miel para tu alma")
+  return React.createElement('div', { className: "flex flex-col h-full bg-zinc-50 dark:bg-slate-900 text-stone-800 dark:text-stone-200 selection:bg-rose-200 selection:text-rose-900" },
+    React.createElement('header', { className: "relative w-full p-4 text-center bg-rose-50/80 dark:bg-slate-800/80 sticky top-0 z-10 shadow-md backdrop-blur-lg border-b border-rose-200/60 dark:border-slate-700/60" },
+      React.createElement('h1', { className: "text-3xl font-bold font-serif text-rose-900 dark:text-rose-300" }, "Palabra de Dios"),
+      React.createElement('p', { className: "mt-1 text-lg text-rose-800/80 dark:text-rose-400/80" }, "Miel para tu alma")
     ),
-    React.createElement('main', { className: "flex-grow overflow-y-auto p-4 flex flex-col items-center gap-4 pb-40" },
-      React.createElement('div', { className: "w-full max-w-2xl mx-auto" }, renderMainContent())
+    React.createElement('main', { className: "flex-grow p-4 flex flex-col items-center justify-start gap-4 pb-32" },
+      React.createElement('div', { className: "w-full max-w-2xl mx-auto" }, renderMainContent()),
+      React.createElement('div', { className: "mt-auto text-center text-xs text-stone-500 dark:text-stone-400 pb-2" },
+          React.createElement('p', null, "© Se Valiente Dios te Ama"),
+          React.createElement('p', null, "2025 | Todo los derechos reservados")
+      )
     ),
-    React.createElement('div', { className: "fixed bottom-0 left-0 right-0 w-full p-4 z-20 bg-gradient-to-t from-zinc-50/80 to-zinc-50/0 backdrop-blur-lg" },
+     React.createElement('button', {
+        onClick: toggleTheme,
+        'aria-label': 'Cambiar tema',
+        className: "fixed bottom-48 right-4 z-30 w-12 h-12 bg-white dark:bg-slate-800 rounded-full shadow-lg border border-zinc-200/80 dark:border-slate-700 flex items-center justify-center text-rose-500 dark:text-amber-300 hover:bg-zinc-100 dark:hover:bg-slate-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 dark:focus:ring-amber-400 dark:focus:ring-offset-slate-900"
+      },
+      theme === 'light' 
+        ? React.createElement(MoonIcon, { className: "h-6 w-6" }) 
+        : React.createElement(SunIcon, { className: "h-6 w-6" })
+    ),
+    React.createElement('footer', { className: "fixed bottom-0 left-0 right-0 w-full p-4 z-20" },
       React.createElement('div', { className: "max-w-4xl mx-auto" },
         React.createElement(PromoBanner, null)
       )
@@ -207,10 +269,10 @@ const App = () => {
       isOpen: isModalOpen,
       onClose: () => setIsModalOpen(false)
     },
-      React.createElement('h2', { className: "text-2xl font-bold font-serif text-rose-900 mb-4" }, "Reflexión"),
-      currentVerse?.reflexion1 && React.createElement('p', { className: "text-stone-700 whitespace-pre-wrap leading-relaxed text-sm mb-4" }, currentVerse.reflexion1),
-      currentVerse?.reflexion2 && React.createElement('p', { className: "text-stone-700 whitespace-pre-wrap leading-relaxed text-sm" }, currentVerse.reflexion2),
-      React.createElement('p', { className: "text-stone-800 font-semibold text-center mt-6" }, "Dios te Bendiga")
+      React.createElement('h2', { className: "text-2xl font-bold font-serif text-rose-900 dark:text-rose-300 mb-4" }, "Reflexión"),
+      currentVerse?.reflexion1 && React.createElement('p', { className: "text-stone-700 dark:text-stone-300 whitespace-pre-wrap leading-relaxed text-sm mb-4" }, currentVerse.reflexion1),
+      currentVerse?.reflexion2 && React.createElement('p', { className: "text-stone-700 dark:text-stone-300 whitespace-pre-wrap leading-relaxed text-sm" }, currentVerse.reflexion2),
+      React.createElement('p', { className: "text-stone-800 dark:text-stone-100 font-semibold text-center mt-6" }, "Dios te Bendiga")
     )
   );
 };
