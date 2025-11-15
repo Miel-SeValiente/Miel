@@ -89,8 +89,9 @@ const SparkleIcon = (props) => (
 );
 
 // --- components/LoadingSpinner.js ---
-const LoadingSpinner = () => {
-  return React.createElement('div', { className: "animate-spin rounded-full h-6 w-6 border-b-2 border-white" });
+const LoadingSpinner = (props) => {
+  const { className = "animate-spin rounded-full h-6 w-6 border-b-2 border-white" } = props;
+  return React.createElement('div', { className });
 };
 
 // --- components/VerseDisplay.js ---
@@ -202,45 +203,55 @@ const App = () => {
     }
   };
 
+  const mainContent = () => {
+    if (isLoadingVerse && !currentVerse) {
+      return React.createElement('div', { className: "flex justify-center items-center h-64" },
+        React.createElement(LoadingSpinner, { className: "animate-spin rounded-full h-8 w-8 border-b-2 border-rose-500" })
+      );
+    }
+    if (error) {
+      return React.createElement('div', { className: "text-center text-red-600 bg-red-100 p-4 rounded-lg" }, error);
+    }
+    if (currentVerse) {
+      return React.createElement(React.Fragment, null,
+        React.createElement(VerseDisplay, { verse: currentVerse, isLoading: isLoadingVerse }),
+        React.createElement('div', { className: "flex flex-wrap justify-end items-center gap-3 mt-4 w-full" },
+          React.createElement('button', {
+              onClick: handleAiReflection,
+              disabled: isGenerating,
+              className: "group flex items-center justify-center gap-2.5 px-5 py-2.5 font-semibold text-white bg-gradient-to-r from-rose-400 to-rose-600 rounded-full shadow-lg hover:shadow-xl hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 transition-all duration-300 ease-in-out disabled:opacity-70 disabled:cursor-not-allowed disabled:scale-100"
+            },
+            isGenerating ? React.createElement(React.Fragment, null,
+                React.createElement(LoadingSpinner, null),
+                React.createElement('span', null, "Generando...")
+              )
+            : React.createElement(React.Fragment, null,
+                React.createElement(SparkleIcon, { className: "h-5 w-5 transition-transform duration-300 group-hover:rotate-12" }),
+                React.createElement('span', null,
+                    aiReflection || generationError
+                      ? (showReflection ? 'Ocultar Reflexión' : 'Ver Reflexión')
+                      : 'Ver Reflexión'
+                )
+              )
+          )
+        ),
+        showReflection && React.createElement(AIGeneratedContent, {
+            isLoading: isGenerating,
+            reflection: aiReflection,
+            error: generationError,
+          })
+      );
+    }
+    return React.createElement('div', { className: "text-center text-stone-500 mt-10" }, "No se encontraron versículos.");
+  };
+
   return React.createElement('div', { className: "flex flex-col min-h-screen bg-zinc-50 text-stone-800 selection:bg-rose-200 selection:text-rose-900" },
     React.createElement('header', { className: "relative w-full p-4 text-center bg-rose-50 sticky top-0 z-10 shadow-md" },
       React.createElement('h1', { className: "text-3xl font-bold font-serif text-rose-900" }, "Palabra de Dios"),
       React.createElement('p', { className: "mt-1 text-lg text-rose-800/80" }, "Miel para tu alma")
     ),
     React.createElement('main', { className: "flex-grow overflow-y-auto p-4 flex flex-col items-center gap-4 pb-40" },
-      React.createElement('div', { className: "w-full max-w-2xl mx-auto" },
-        isLoadingVerse && !currentVerse ? React.createElement('div', { className: "flex justify-center items-center h-64" }, React.createElement(LoadingSpinner, {className: "border-rose-500 h-8 w-8"}))
-        : error ? React.createElement('div', { className: "text-center text-red-600 bg-red-100 p-4 rounded-lg" }, error)
-        : currentVerse ? React.createElement(React.Fragment, null,
-            React.createElement(VerseDisplay, { verse: currentVerse, isLoading: isLoadingVerse }),
-            React.createElement('div', { className: "flex flex-wrap justify-end items-center gap-3 mt-4 w-full" },
-              React.createElement('button', {
-                  onClick: handleAiReflection,
-                  disabled: isGenerating,
-                  className: "group flex items-center justify-center gap-2.5 px-5 py-2.5 font-semibold text-white bg-gradient-to-r from-rose-400 to-rose-600 rounded-full shadow-lg hover:shadow-xl hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 transition-all duration-300 ease-in-out disabled:opacity-70 disabled:cursor-not-allowed disabled:scale-100"
-                },
-                isGenerating ? React.createElement(React.Fragment, null,
-                    React.createElement(LoadingSpinner, null),
-                    React.createElement('span', null, "Generando...")
-                  )
-                : React.createElement(React.Fragment, null,
-                    React.createElement(SparkleIcon, { className: "h-5 w-5 transition-transform duration-300 group-hover:rotate-12" }),
-                    React.createElement('span', null,
-                        aiReflection || generationError
-                          ? (showReflection ? 'Ocultar Reflexión' : 'Ver Reflexión')
-                          : 'Ver Reflexión'
-                    )
-                  )
-              )
-            ),
-            showReflection && React.createElement(AIGeneratedContent, {
-                isLoading: isGenerating,
-                reflection: aiReflection,
-                error: generationError,
-              })
-          )
-        : React.createElement('div', { className: "text-center text-stone-500 mt-10" }, "No se encontraron versículos.")
-      )
+      React.createElement('div', { className: "w-full max-w-2xl mx-auto" }, mainContent())
     ),
     React.createElement('div', { className: "fixed bottom-0 left-0 right-0 w-full p-4 z-20 bg-gradient-to-t from-zinc-50 to-zinc-50/0" },
       React.createElement('div', { className: "max-w-4xl mx-auto" },
