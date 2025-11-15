@@ -50,7 +50,7 @@ const fetchVerses = async () => {
 // --- Contenido de components/Icons.js ---
 const TShirtIcon = (props) => (
   React.createElement('svg', { xmlns: "http://www.w3.org/2000/svg", width: "24", height: "24", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", ...props },
-    React.createElement('path', { d: "M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z" })
+    React.createElement('path', { d: "M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99 .84H6v10c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z" })
   )
 );
 
@@ -69,7 +69,7 @@ const LoadingSpinner = () => {
 const VerseDisplay = ({ verse, isLoading }) => {
   return React.createElement('div', { className: `bg-white p-6 rounded-2xl shadow-lg border border-zinc-200/80 w-full transition-opacity duration-300 ease-in-out ${isLoading ? 'opacity-50' : 'opacity-100'}` },
     React.createElement('blockquote', { className: "text-center" },
-      React.createElement('p', { className: "text-xl font-serif text-stone-800 leading-relaxed" }, `“${verse.text}”`)
+      React.createElement('p', { className: "text-xl md:text-2xl font-serif text-stone-800 leading-relaxed" }, `“${verse.text}”`)
     ),
     React.createElement('cite', { className: "block text-right mt-6 text-md font-semibold text-rose-800" }, `— ${verse.reference}`)
   );
@@ -77,7 +77,7 @@ const VerseDisplay = ({ verse, isLoading }) => {
 
 // --- Contenido de components/PromoBanner.js ---
 const PromoBanner = () => {
-  const whatsappNumber = '584125384440'; 
+  const whatsappNumber = '584125384440';
   const message = encodeURIComponent('¡Quiero mas información por favor!');
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${message}`;
 
@@ -85,7 +85,7 @@ const PromoBanner = () => {
     React.createElement('div', { className: "flex-shrink-0" },
       React.createElement(TShirtIcon, { className: "h-12 w-12 text-rose-500" })
     ),
-    React.createElement('div', { className: "flex-grow flex flex-col items-start gap-2" },
+    React.createElement('div', { className: "flex-grow flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2" },
       React.createElement('div', null,
         React.createElement('h3', { className: "font-bold font-serif text-rose-900 text-lg" }, "¡Viste tu Fe!"),
         React.createElement('p', { className: "text-sm text-rose-800/90" }, "Franelas con la palabra de Dios.")
@@ -94,7 +94,7 @@ const PromoBanner = () => {
         href: whatsappUrl,
         target: "_blank", 
         rel: "noopener noreferrer",
-        className: "px-4 py-2 text-sm font-semibold text-white bg-green-500 rounded-full shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-300 flex items-center gap-2"
+        className: "px-4 py-2 text-sm font-semibold text-white bg-green-500 rounded-full shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-300 flex items-center gap-2 self-start sm:self-center whitespace-nowrap"
       },
         React.createElement(WhatsAppIcon, { className: "h-5 w-5" }),
         "Contactar Vendedor"
@@ -118,8 +118,9 @@ const App = () => {
         setIsLoadingVerse(true);
         const fetchedVerses = await fetchVerses();
         setVerses(fetchedVerses);
-        setCurrentVerse(fetchedVerses[Math.floor(Math.random() * fetchedVerses.length)]);
-        setShowComment(false);
+        if (fetchedVerses.length > 0) {
+          setCurrentVerse(fetchedVerses[Math.floor(Math.random() * fetchedVerses.length)]);
+        }
       } catch (err) {
         setError('No se pudieron cargar los versículos. Por favor, inténtelo de nuevo más tarde.');
         console.error(err);
@@ -140,23 +141,27 @@ const App = () => {
       React.createElement('h1', { className: "text-3xl font-bold font-serif text-rose-900" }, "Palabra de Dios"),
       React.createElement('p', { className: "mt-1 text-lg text-rose-800/80" }, "Miel para tu alma")
     ),
-    React.createElement('main', { className: "flex-grow overflow-y-auto p-4 flex flex-col items-center gap-6 pb-40" },
-      isLoadingVerse ? React.createElement('div', { className: "flex justify-center items-center h-full" }, React.createElement(LoadingSpinner, null))
+    React.createElement('main', { className: "flex-grow overflow-y-auto p-4 flex flex-col items-center gap-4 pb-40" },
+      isLoadingVerse && !currentVerse ? React.createElement('div', { className: "flex justify-center items-center h-full" }, React.createElement(LoadingSpinner, null))
       : error ? React.createElement('div', { className: "text-center text-red-600 bg-red-100 p-4 rounded-lg" }, error)
       : currentVerse ? React.createElement(React.Fragment, null,
           React.createElement(VerseDisplay, { verse: currentVerse, isLoading: isLoadingVerse }),
-          currentVerse.comment && React.createElement('button', {
-            onClick: handleToggleComment,
-            className: "mt-4 px-6 py-2 font-semibold text-rose-800 bg-rose-100 border border-rose-200 rounded-full shadow-sm hover:bg-rose-200 transition-colors duration-300"
-          }, showComment ? 'Ocultar Comentario' : 'Ver Comentario'),
+          currentVerse.comment && React.createElement('div', {className: "flex flex-wrap justify-center items-center gap-4 mt-2 w-full"},
+            React.createElement('button', {
+              onClick: handleToggleComment,
+              className: "px-6 py-2 font-semibold text-rose-800 bg-rose-100 border border-rose-200 rounded-full shadow-sm hover:bg-rose-200 transition-colors duration-300"
+            }, showComment ? 'Ocultar Comentario' : 'Ver Comentario')
+          ),
           showComment && currentVerse.comment && React.createElement('div', { className: "w-full p-6 mt-2 bg-white rounded-2xl shadow-lg border border-zinc-200/80 animate-fade-in" },
             React.createElement('p', { className: "text-stone-700 whitespace-pre-wrap leading-relaxed" }, currentVerse.comment)
           )
         )
       : React.createElement('div', { className: "text-center text-stone-500" }, "No se encontraron versículos.")
     ),
-    React.createElement('footer', { className: "fixed bottom-0 left-0 right-0 w-full p-4 z-10" },
-      React.createElement(PromoBanner, null)
+    React.createElement('div', { className: "fixed bottom-0 left-0 right-0 w-full p-4 z-20" },
+      React.createElement('div', { className: "max-w-4xl mx-auto" },
+        React.createElement(PromoBanner, null)
+      )
     )
   );
 };
