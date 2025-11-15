@@ -117,7 +117,7 @@ const Modal = ({ isOpen, onClose, children }) => {
 
   return React.createElement('div', {
     onClick: onClose,
-    className: "fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 backdrop-blur-sm"
+    className: "fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4"
   },
     React.createElement('div', {
       onClick: e => e.stopPropagation(),
@@ -198,7 +198,7 @@ const App = () => {
     React.createElement('main', { className: "flex-grow overflow-y-auto p-4 flex flex-col items-center gap-4 pb-40" },
       React.createElement('div', { className: "w-full max-w-2xl mx-auto" }, renderMainContent())
     ),
-    React.createElement('div', { className: "fixed bottom-0 left-0 right-0 w-full p-4 z-20 bg-gradient-to-t from-zinc-50 to-zinc-50/0" },
+    React.createElement('div', { className: "fixed bottom-0 left-0 right-0 w-full p-4 z-20 bg-gradient-to-t from-zinc-50/80 to-zinc-50/0 backdrop-blur-lg" },
       React.createElement('div', { className: "max-w-4xl mx-auto" },
         React.createElement(PromoBanner, null)
       )
