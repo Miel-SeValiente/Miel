@@ -56,7 +56,7 @@ const TShirtIcon = (props) => (
 
 const WhatsAppIcon = (props) => (
     React.createElement('svg', { xmlns: "http://www.w3.org/2000/svg", width: "24", height: "24", viewBox: "0 0 24 24", fill: "currentColor", ...props },
-        React.createElement('path', { d: "M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.894 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 4.315 1.731 6.269l-.444 1.625 1.664-.436zM15.245 14.193c-.146-.27-.291-.491-.457-.682-.166-.191-.363-.349-.626-.499-.263-.15-.572-.25-.926-.299-.354-.048-.74-.022-1.092.053-.352.075-.677.204-.958.384-.28.18-.521.42-.71.706-.19.287-.312.614-.364.979-.053.365-.053.73.001 1.093.054.363.16.704.316.996.156.292.368.558.629.798.26.24.56.444.889.606.328.162.68.287 1.05.372.37.086.756.129 1.154.129.472 0 .93-.057 1.365-.172.435-.115.819-.299 1.14-.551.32-.251.564-.568.72-.948.156-.38.231-.81.225-1.285-.006-.475-.113-.905-.318-1.285z" })
+        React.createElement('path', { d: "M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.79.49 3.48 1.38 4.94L2 22l5.25-1.42c1.4.83 3.04 1.32 4.79 1.32h.01c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm4.84 12.2c-.22-.12-1.3-.64-1.5-.71-.2-.07-.35-.07-.49.07-.15.15-.57.71-.7.84-.12.12-.27.12-.49.07-.22-.05-1.02-.38-1.95-1.2-.72-.64-1.2-1.42-1.37-1.67-.17-.25-.02-.37.05-.5.06-.12.15-.27.22-.37.07-.1.1-.17.15-.27.05-.1.02-.2-.03-.27-.05-.07-.49-1.17-.67-1.62-.17-.42-.35-.37-.49-.37h-.42c-.15 0-.37.05-.57.25-.2.2-.75.74-.75 1.79s.77 2.07.87 2.22c.1.15 1.52 2.36 3.67 3.25.52.22 1.02.35 1.37.45.62.17 1.17.15 1.57-.02.45-.2.75-.84.85-1.04.1-.2.1-.37.07-.49z" })
     )
 );
 
@@ -69,7 +69,7 @@ const LoadingSpinner = () => {
 const VerseDisplay = ({ verse, isLoading }) => {
   return React.createElement('div', { className: `bg-white p-6 rounded-2xl shadow-lg border border-zinc-200/80 w-full transition-opacity duration-300 ease-in-out ${isLoading ? 'opacity-50' : 'opacity-100'}` },
     React.createElement('blockquote', { className: "text-center" },
-      React.createElement('p', { className: "text-base md:text-lg text-stone-800 leading-relaxed" }, `“${verse.text}”`)
+      React.createElement('p', { className: "text-sm md:text-base text-stone-800 leading-relaxed" }, `“${verse.text}”`)
     ),
     React.createElement('cite', { className: "block text-right mt-6 text-md font-semibold text-rose-800" }, `— ${verse.reference}`)
   );
@@ -153,7 +153,7 @@ const App = () => {
             }, showComment ? 'Ocultar Comentario' : 'Ver Comentario')
           ),
           showComment && currentVerse.comment && React.createElement('div', { className: "w-full p-6 mt-2 bg-white rounded-2xl shadow-lg border border-zinc-200/80 animate-fade-in" },
-            React.createElement('p', { className: "text-stone-700 whitespace-pre-wrap leading-relaxed text-sm" }, currentVerse.comment)
+            React.createElement('p', { className: "text-stone-700 whitespace-pre-wrap leading-relaxed text-xs" }, currentVerse.comment)
           )
         )
       : React.createElement('div', { className: "text-center text-stone-500" }, "No se encontraron versículos.")
