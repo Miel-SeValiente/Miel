@@ -153,19 +153,11 @@ const Modal = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null;
 
   return React.createElement('div', {
-    onClick: onClose,
     className: "fixed inset-0 bg-black/70 dark:bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
   },
     React.createElement('div', {
-      onClick: e => e.stopPropagation(),
       className: "bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-lg p-6 relative animate-fade-in"
     },
-      React.createElement('button', {
-        onClick: onClose,
-        className: "absolute top-4 right-4 text-stone-500 hover:text-stone-800 dark:text-slate-400 dark:hover:text-slate-100 transition-colors"
-      },
-        React.createElement(CloseIcon, { className: "h-6 w-6" })
-      ),
       children
     )
   );
@@ -272,7 +264,13 @@ const App = () => {
       React.createElement('h2', { className: "text-2xl font-bold font-serif text-rose-900 dark:text-rose-300 mb-4" }, "Reflexión"),
       currentVerse?.reflexion1 && React.createElement('p', { className: "text-stone-700 dark:text-stone-300 whitespace-pre-wrap leading-relaxed text-sm mb-4" }, currentVerse.reflexion1),
       currentVerse?.reflexion2 && React.createElement('p', { className: "text-stone-700 dark:text-stone-300 whitespace-pre-wrap leading-relaxed text-sm" }, currentVerse.reflexion2),
-      React.createElement('p', { className: "text-stone-800 dark:text-stone-100 font-semibold text-center mt-6" }, "Dios te Bendiga")
+      React.createElement('div', { className: "mt-8 flex justify-between items-center pt-4 border-t border-zinc-100 dark:border-slate-700" },
+        React.createElement('p', { className: "text-stone-800 dark:text-stone-100 font-semibold" }, "Dios te Bendiga"),
+        React.createElement('button', {
+          onClick: () => setIsModalOpen(false),
+          className: "px-6 py-2 rounded-full bg-gradient-to-r from-blue-400 to-blue-600 hover:from-blue-500 hover:to-blue-700 text-white font-bold shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105"
+        }, "Amén")
+      )
     )
   );
 };
